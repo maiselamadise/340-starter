@@ -52,7 +52,7 @@ header a{
 
 nav{
   background: #2c2c44;
-  margin: 0 20px;
+  padding: 0 20px;
 }
 
 nav ul{
@@ -89,6 +89,7 @@ nav a:hover{
 
 .hero-text{
   color: #00a3c4;
+  max-width: 300px;
 }
 
 .hero-text ul{
@@ -96,7 +97,8 @@ nav a:hover{
 }
 
 .hero-image img{
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
 }
 
 /* BUTTON */
@@ -108,6 +110,10 @@ nav a:hover{
   color: white;
   cursor: pointer;
   font-weight: bold;
+}
+
+.own-btn:hover{
+  background:#0097a7;
 }
 
 /* BOTTOM SECTION */
@@ -129,7 +135,7 @@ nav a:hover{
 .upgrade{
   text-align: center;
   background: #00bcd4;
-  padding: 10px;
+  padding: 15px;
   border-radius: 5px;
 }
 
@@ -137,6 +143,9 @@ nav a:hover{
   width: 70px;
   display: block;
   margin: auto;
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .upgrade a{
@@ -154,26 +163,14 @@ nav a:hover{
 /* FOOTER */
 
 footer{
-  padding: 10px;
+  padding: 15px;
   font-size: 12px;
   text-align: center;
+  margin-top: 20px;
 }
 
 /* MOBILE */
 
-@media screen and (max-width:700px){
-
-.hero{
-  flex-direction: column;
-  text-align: center;
-}
-
-.bottom-section{
-  flex-direction: column;
-}
-
-.hero-image img{
-  width: 250px;
-}
+@media (max-width: 600px){
 
 }
