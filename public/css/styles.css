@@ -4,3 +4,107 @@
 *:after {
   box-sizing: border-box;
 }
+
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  margin:0;
+  background:#f5f5f5;
+  color:#333;
+}
+
+h1{
+  text-align:center;
+  padding:10px;
+}
+
+h2{
+  margin-bottom:10px;
+}
+
+/* HERO SECTION */
+
+.hero{
+  position:relative;
+}
+
+.hero img{
+  width:100%;
+  height:auto;
+}
+
+.hero-info{
+  background:rgba(255,255,255,0.9);
+  padding:10px;
+  margin:10px;
+}
+
+.hero-info ul{
+  padding-left:20px;
+}
+
+.own-btn{
+  background:#0077cc;
+  color:white;
+  border:none;
+  padding:10px 15px;
+  cursor:pointer;
+}
+
+.own-btn:hover{
+  background:#005fa3;
+}
+
+/* REVIEWS */
+
+.reviews{
+  padding:15px;
+}
+
+.reviews ul{
+  padding-left:20px;
+}
+
+/* UPGRADES */
+
+.upgrades{
+  padding:15px;
+}
+
+.upgrade-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.upgrade{
+  text-align:center;
+}
+
+.upgrade img{
+  width:100%;
+  max-width:120px;
+}
+
+/* LARGE SCREEN */
+
+@media screen and (min-width:768px){
+
+  .home-content{
+    display:flex;
+    gap:40px;
+    padding:20px;
+  }
+
+  .reviews{
+    width:50%;
+  }
+
+  .upgrades{
+    width:50%;
+  }
+
+  .upgrade-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+}
