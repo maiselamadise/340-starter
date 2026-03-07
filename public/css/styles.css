@@ -1,110 +1,143 @@
-/******* Change Box Model ***************/
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-}
-
 body{
   font-family: Arial, Helvetica, sans-serif;
+  background:url("/images/site/checkerboard.jpg");
   margin:0;
-  background:#f5f5f5;
-  color:#333;
 }
 
-h1{
-  text-align:center;
+#wrapper{
+  max-width:900px;
+  margin:auto;
+  background:white;
+  border:5px solid #00bcd4;
+  border-radius:10px;
+}
+
+/* HEADER */
+
+header{
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+
+}
+
+header h1{
+  margin:0;
+}
+
+.account{
+  font-size:14px;
+}
+
+/* NAVIGATION */
+
+nav{
+  background:#2c2c44;
+}
+
+nav ul{
+  display:flex;
+  justify-content:space-around;
+  list-style:none;
   padding:10px;
+  margin:0;
+  color: aliceblue;
 }
 
-h2{
-  margin-bottom:10px;
+nav a{
+  color:white;
+  text-decoration:none;
 }
+nav a:hover{
+ color: #00bcd4;
+} 
 
-/* HERO SECTION */
+/* HERO */
 
 .hero{
-  position:relative;
+  display:flex;
+  align-items:center;
+  padding:20px;
 }
 
-.hero img{
-  width:100%;
-  height:auto;
+.hero-text{
+  color:#00a3c4;
 }
 
-.hero-info{
-  background:rgba(255,255,255,0.9);
-  padding:10px;
-  margin:10px;
-}
-
-.hero-info ul{
+.hero-text ul{
   padding-left:20px;
 }
 
+.hero-image img{
+  width:300px;
+}
+
 .own-btn{
-  background:#0077cc;
-  color:white;
+  background:#00bcd4;
   border:none;
-  padding:10px 15px;
+  padding:10px 20px;
+  color:white;
   cursor:pointer;
 }
 
-.own-btn:hover{
-  background:#005fa3;
+/* BOTTOM SECTION */
+
+.bottom-section{
+  display:flex;
+  padding:20px;
+  gap:30px;
+}
+
+/* UPGRADES */
+
+.upgrade-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.upgrade{
+  text-align:center;
+  background:#00bcd4;
+  padding:10px;
+}
+
+.upgrade img{
+  width:70px;
+  display:block;
+  margin:auto;
+}
+
+.upgrade a{
+  display:block;
+  color:blue;
 }
 
 /* REVIEWS */
-
-.reviews{
-  padding:15px;
-}
 
 .reviews ul{
   padding-left:20px;
 }
 
-/* UPGRADES */
+/* FOOTER */
 
-.upgrades{
-  padding:15px;
+footer{
+  padding:10px;
+  font-size:12px;
+}
+@media screen and (max-width:700px){
+
+.hero{
+flex-direction:column;
+text-align:center;
 }
 
-.upgrade-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
+.bottom-section{
+flex-direction:column;
 }
 
-.upgrade{
-  text-align:center;
+.hero-image img{
+width:200px;
 }
-
-.upgrade img{
-  width:100%;
-  max-width:120px;
-}
-
-/* LARGE SCREEN */
-
-@media screen and (min-width:768px){
-
-  .home-content{
-    display:flex;
-    gap:40px;
-    padding:20px;
-  }
-
-  .reviews{
-    width:50%;
-  }
-
-  .upgrades{
-    width:50%;
-  }
-
-  .upgrade-grid{
-    grid-template-columns:1fr 1fr;
-  }
 
 }
