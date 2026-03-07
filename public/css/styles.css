@@ -176,10 +176,4 @@ footer{
   width: 250px;
 }
 
-nav ul{
-  flex-direction: column;
-  gap: 10px;
-  text-align: center;
-}
-
 }
