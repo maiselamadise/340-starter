@@ -51,7 +51,11 @@ CREATE TABLE account (
 -- ==========================================
 
 INSERT INTO classification (classification_name)
-VALUES ('Sport'), ('SUV'), ('Truck'), ('Sedan');
+VALUES
+('Sport'),
+('SUV'),
+('Truck'),
+('Sedan');
 
 -- ==========================================
 -- Insert inventory data
@@ -63,20 +67,3 @@ VALUES
 ('GM','Hummer',2006,'This vehicle has small interiors but powerful performance.','/images/hummer.jpg','/images/hummer-tn.jpg',35000,50000,'Black',2),
 ('Ferrari','458 Italia',2015,'A high performance sports car.','/images/ferrari.jpg','/images/ferrari-tn.jpg',250000,12000,'Red',1),
 ('Lamborghini','Aventador',2019,'Luxury sport vehicle with extreme speed.','/images/lamborghini.jpg','/images/lamborghini-tn.jpg',400000,8000,'Yellow',1);
-
--- ==========================================
--- Assignment 2 Query 4
--- ==========================================
-
-UPDATE inventory
-SET inv_description = REPLACE(inv_description, 'small interiors', 'a huge interior')
-WHERE inv_make = 'GM'
-AND inv_model = 'Hummer';
-
--- ==========================================
--- Assignment 2 Query 6
--- ==========================================
-
-UPDATE inventory
-SET inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/'),
-    inv_thumbnail = REPLACE(inv_thumbnail, '/images/', '/images/vehicles/');
