@@ -1,13 +1,14 @@
 @media (max-width: 600px){
 
-  /* Wrapper: reduce padding and border radius */
+  /* Wrapper: reduce spacing */
   #wrapper{
-    border-radius: 30px;
-    border-width: 5px;
+    padding: 10px;
+    border-radius: 20px;
   }
 
-  /* Header: stack elements vertically */
+  /* Header: stack logo and title */
   header{
+    display:flex;
     flex-direction: column;
     align-items: flex-start;
   }
@@ -17,8 +18,9 @@
     font-size: 1.5rem;
   }
 
-  /* Navigation: stack links instead of row */
+  /* Navigation: stack menu items */
   nav ul{
+    display:flex;
     flex-direction: column;
     align-items: flex-start;
   }
@@ -27,11 +29,12 @@
     padding: 10px 0;
   }
 
-  /* Hero: stack text and image */
+  /* Hero section: stack image and text */
   .hero{
+    display:flex;
     flex-direction: column;
-    gap: 20px;
     text-align: center;
+    gap: 20px;
   }
 
   .hero-text{
@@ -39,15 +42,19 @@
   }
 
   .hero-image img{
-    max-width: 100%;
+    width: 100%;
+    height: auto;
   }
 
-  /* Bottom section: stack upgrades and reviews */
+  /* Bottom section stack */
   .bottom-section{
+    display:flex;
     flex-direction: column;
   }
 
+  /* Upgrades grid becomes single column */
   .upgrade-grid{
     grid-template-columns: 1fr;
   }
+
 }
