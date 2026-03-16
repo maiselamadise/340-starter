@@ -1,53 +1,153 @@
-@media (max-width: 600px){
+/* GLOBAL STYLES */
 
-  /* Wrapper: reduce padding and border radius */
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  margin:0;
+  background-image:url("/images/site/small_check.jpg");
+}
+
+/* WRAPPER */
+
+#wrapper{
+  max-width:1000px;
+  margin:auto;
+  background:white;
+  border:5px solid #00a6b2;
+  border-radius:15px;
+  padding:50px;
+}
+
+/* HEADER */
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+header h1{
+  margin:0;
+}
+
+.account a{
+  text-decoration:none;
+  font-weight:bold;
+  color:black;
+}
+
+/* NAVIGATION */
+
+nav{
+  background:#2e3048;
+  margin-top:10px;
+}
+
+nav ul{
+  display:flex;
+  list-style:none;
+  margin:0;
+  padding:10px;
+  justify-content:space-around;
+}
+
+nav a{
+  color:white;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+/* HERO SECTION */
+
+.hero{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:20px;
+}
+
+.hero-text h2{
+  color:#00a6b2;
+}
+
+.hero-text ul{
+  padding-left:20px;
+}
+
+.hero-text button{
+  background:#00a6b2;
+  color:white;
+  border:none;
+  padding:10px 15px;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+.hero-image img{
+  max-width:100%;
+  height:auto;
+}
+
+/* INFO SECTION */
+
+.info-section{
+  display:flex;
+  margin-top:40px;
+  gap:40px;
+}
+
+/* UPGRADES */
+
+.upgrade-grid{
+  display:grid;
+  grid-template-columns:repeat(2,120px);
+  gap:15px;
+}
+
+.upgrade{
+  background:#00a6b2;
+  padding:10px;
+  text-align:center;
+  border-radius:8px;
+}
+
+.upgrade img{
+  width:60px;
+  display:block;
+  margin:auto;
+}
+
+.upgrade a{
+  color:blue;
+  display:block;
+  margin-top:5px;
+}
+
+/* REVIEWS */
+
+.reviews ul{
+  padding-left:20px;
+}
+
+/* FOOTER */
+
+footer{
+  text-align:center;
+  margin-top:40px;
+  font-size:14px;
+}
+
+
+/* -----------------------------
+   MOBILE RESPONSIVE DESIGN
+--------------------------------*/
+
+@media (max-width: 768px){
+
   #wrapper{
-    border-radius: 30px;
-    border-width: 5px;
+    padding:20px;
   }
-
-  /* Header: stack elements vertically */
-  header{
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  header h1{
-    margin-left: 0;
-    font-size: 1.5rem;
-  }
-
-  /* Navigation: stack links instead of row */
-  nav ul{
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  nav li{
-    padding: 10px 0;
-  }
-
-  /* Hero: stack text and image */
   .hero{
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
-  }
-
-  .hero-text{
-    max-width: 100%;
-  }
-
-  .hero-image img{
-    max-width: 100%;
-  }
-
-  /* Bottom section: stack upgrades and reviews */
-  .bottom-section{
-    flex-direction: column;
-  }
-
-  .upgrade-grid{
-    grid-template-columns: 1fr;
-  }
+    flex-direction:column;
+    text-align:center;
+  } 
 }
