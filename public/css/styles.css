@@ -4,18 +4,27 @@ body{
   font-family: Arial, Helvetica, sans-serif;
   margin:0;
   background-image:url("/images/site/small_check.jpg");
+  background-repeat:repeat;
 }
+
+img{
+  max-width:100%;
+  height:auto;
+}
+
 
 /* WRAPPER */
 
 #wrapper{
   max-width:1000px;
   margin:auto;
-  background:white;
+  background-color:white;
   border:5px solid #00a6b2;
   border-radius:15px;
   padding:50px;
+  color:#000;
 }
+
 
 /* HEADER */
 
@@ -33,13 +42,16 @@ header h1{
   text-decoration:none;
   font-weight:bold;
   color:black;
+  background-color:transparent;
 }
+
 
 /* NAVIGATION */
 
 nav{
-  background:#2e3048;
+  background-color:#2e3048;
   margin-top:10px;
+  color:white;
 }
 
 nav ul{
@@ -48,13 +60,20 @@ nav ul{
   margin:0;
   padding:10px;
   justify-content:space-around;
+  flex-wrap:wrap;
 }
 
 nav a{
   color:white;
   text-decoration:none;
   font-weight:bold;
+  background-color:transparent;
 }
+
+nav a:hover{
+  text-decoration:underline;
+}
+
 
 /* HERO SECTION */
 
@@ -63,10 +82,12 @@ nav a{
   justify-content:space-between;
   align-items:center;
   margin-top:20px;
+  gap:20px;
 }
 
 .hero-text h2{
   color:#00a6b2;
+  background-color:transparent;
 }
 
 .hero-text ul{
@@ -74,7 +95,7 @@ nav a{
 }
 
 .hero-text button{
-  background:#00a6b2;
+  background-color:#00a6b2;
   color:white;
   border:none;
   padding:10px 15px;
@@ -82,10 +103,6 @@ nav a{
   margin-top:10px;
 }
 
-.hero-image img{
-  max-width:100%;
-  height:auto;
-}
 
 /* INFO SECTION */
 
@@ -93,21 +110,24 @@ nav a{
   display:flex;
   margin-top:40px;
   gap:40px;
+  align-items:flex-start;
 }
+
 
 /* UPGRADES */
 
 .upgrade-grid{
   display:grid;
-  grid-template-columns:repeat(2,120px);
+  grid-template-columns:repeat(2,1fr);
   gap:15px;
 }
 
 .upgrade{
-  background:#00a6b2;
+  background-color:#00a6b2;
   padding:10px;
   text-align:center;
   border-radius:8px;
+  color:white;
 }
 
 .upgrade img{
@@ -118,9 +138,11 @@ nav a{
 
 .upgrade a{
   color:blue;
+  background-color:transparent;
   display:block;
   margin-top:5px;
 }
+
 
 /* REVIEWS */
 
@@ -128,12 +150,15 @@ nav a{
   padding-left:20px;
 }
 
+
 /* FOOTER */
 
 footer{
   text-align:center;
   margin-top:40px;
   font-size:14px;
+  color:#000;
+  background-color:transparent;
 }
 
 
@@ -141,13 +166,17 @@ footer{
    MOBILE RESPONSIVE DESIGN
 --------------------------------*/
 
-@media (max-width: 768px){
+@media (max-width:768px){
 
-  #wrapper{
-    padding:20px;
+
+  header{
+    flex-direction:column;
+    gap:10px;
   }
+
   .hero{
     flex-direction:column;
     text-align:center;
-  } 
+  }
+
 }
