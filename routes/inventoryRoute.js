@@ -1,14 +1,18 @@
-// inventoryRoute.js
 const express = require("express")
 const router = new express.Router()
 const invController = require("../controllers/invController")
 const utilities = require("../utilities/")
-// ❌ REMOVED: inventory-validation (file doesn't exist)
+
+//  Route for classification view by classification id
+router.get(
+  "/type/:classificationId",
+  utilities.handleErrors(invController.buildByClassificationId)
+)
 
 // Route for vehicle detail view
-router.get("/detail/:inv_id", invController.buildByInventoryId)
+router.get(
+  "/detail/:inv_id",
+  utilities.handleErrors(invController.buildByInventoryId)
+)
 
 module.exports = router
-
-
-

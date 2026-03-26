@@ -1,25 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title><%= title %></title>
-  <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
+<section class="vehicle-detail">
 
-<header>
-  <nav>
-    <%- nav %>
-  </nav>
-</header>
+  <!-- Image -->
+  <div class="vehicle-image">
+    <img 
+      src="<%= vehicle.inv_image %>" 
+      alt="<%= vehicle.inv_make %> <%= vehicle.inv_model %>"
+      onerror="this.src='/images/no-image.png'"
+    >
+  </div>
 
-<main>
-  <h1><%= title %></h1>
+  <!-- Info -->
+  <div class="vehicle-info">
+    <h2 class="vehicle-title">
+      <%= vehicle.inv_year %> <%= vehicle.inv_make %> <%= vehicle.inv_model %>
+    </h2>
 
-  <section class="vehicle-container">
-    <%- vehicleHTML %>
-  </section>
-</main>
+    <p class="price">$<%= Number(vehicle.inv_price).toLocaleString() %></p>
 
-</body>
-</html>
+    <p class="description"><%= vehicle.inv_description %></p>
+
+    <ul class="specs">
+      <li><span>Year</span><strong><%= vehicle.inv_year %></strong></li>
+      <li><span>Mileage</span><strong><%= vehicle.inv_miles %> km</strong></li>
+      <li><span>Color</span><strong><%= vehicle.inv_color %></strong></li>
+    </ul>
+
+    <div class="actions">
+      <button class="cta-btn">Contact Dealer</button>
+      <button class="secondary-btn">Save Vehicle</button>
+    </div>
+  </div>
+
+</section>
