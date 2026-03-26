@@ -43,6 +43,7 @@ app.use(async (req, res, next) => {
 // Static routes
 app.use(require("./routes/static"))
 
+
 // Index Route
 app.get("/", utilities.handleErrors(baseController.buildHome))
 
