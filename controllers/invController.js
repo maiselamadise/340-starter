@@ -22,7 +22,7 @@ invCont.buildByClassificationId = async function (req, res, next) {
 
 
 /* ***************************
- *  Build inventory item detail view  ✅ ADD THIS
+ *  Build inventory item detail view 
  * ************************** */
 invCont.buildByInventoryId = async function (req, res, next) {
   const inv_id = req.params.inv_id
