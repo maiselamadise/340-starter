@@ -5,17 +5,15 @@
 
 const expressLayouts = require("express-ejs-layouts")
 const express = require("express")
-const env = require("dotenv").config()
+require("dotenv").config()
+
 const utilities = require("./utilities/")
 const app = express()
 
-const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 
-// Added for troubleshooting queries
-// during development
+// Database (for development troubleshooting)
 const pool = require("./database/")
-const inventoryRoute = require("./routes/inventoryRoute")
 
 /* ***********************
  * Static Files
@@ -32,11 +30,22 @@ app.set("layout", "./layouts/layout")
 /* ***********************
  * Routes
  *************************/
+
+// Static routes
 app.use(require("./routes/static"))
+
 // Index Route
 app.get("/", utilities.handleErrors(baseController.buildHome))
+
 // Inventory routes
 app.use("/inv", require("./routes/inventoryRoute"))
+
+/* ***********************
+ * Intentional 500 Error Route (for testing)
+ *************************/
+app.get("/error", (req, res, next) => {
+  next(new Error("Intentional server error"))
+})
 
 /* ***********************
  * 404 Route - must be last route
@@ -44,30 +53,44 @@ app.use("/inv", require("./routes/inventoryRoute"))
 app.use((req, res, next) => {
   next({ status: 404, message: "Sorry, we couldn't find that page." })
 })
+
+/* ***********************
+ * Express Error Handler
+ * Place after all other middleware
+ *************************/
+app.use(async (err, req, res, next) => {
+  let nav = ""
+  try {
+    nav = await utilities.getNav()
+  } catch (e) {
+    nav = "<p>Navigation unavailable</p>"
+  }
+
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
+
+  let message
+  if (err.status == 404) {
+    message = err.message
+  } else {
+    message = "Oh no! There was a crash. Maybe try a different route?"
+  }
+
+  res.status(err.status || 500).render("errors/error", {
+    title: err.status || "Server Error",
+    message,
+    nav
+  })
+})
+
 /* ***********************
  * Local Server Information
  *************************/
-const port = process.env.PORT
-const host = process.env.HOST
+const port = process.env.PORT || 3000
+const host = process.env.HOST || "localhost"
 
 /* ***********************
  * Server Start
  *************************/
 app.listen(port, () => {
-  console.log(`app listening on ${host}:${port}`)
-})
-
-/* ***********************
-* Express Error Handler
-* Place after all other middleware
-*************************/
-app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav()
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
-  res.render("errors/error", {
-    title: err.status || 'Server Error',
-    message,
-    nav
-  })
+  console.log(`App running at http://${host}:${port}`)
 })
