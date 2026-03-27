@@ -58,7 +58,7 @@ Util.buildClassificationGrid = async function (data) {
   return grid
 }
 
-/* 🔥 REQUIRED: Build Vehicle Detail */
+/*  REQUIRED: Build Vehicle Detail */
 Util.buildVehicleDetail = async function (vehicle) {
   const price = new Intl.NumberFormat("en-US", {
     style: "currency",
