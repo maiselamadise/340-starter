@@ -1,6 +1,5 @@
 /* ******************************************
- * This server.js file is the primary file of the 
- * application. It is used to control the project.
+ * Primary server file
  *******************************************/
 
 const expressLayouts = require("express-ejs-layouts")
@@ -12,21 +11,23 @@ const app = express()
 
 const baseController = require("./controllers/baseController")
 
-// Database (for development troubleshooting)
-const pool = require("./database/")
-
 /* ***********************
- * Static Files
+ * Middleware
  *************************/
 app.use(express.static("public"))
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
 /* ***********************
- * View Engine and Templates
+ * View Engine
  *************************/
 app.set("view engine", "ejs")
 app.use(expressLayouts)
 app.set("layout", "./layouts/layout")
 
+/* ***********************
+ * Global Navigation
+ *************************/
 app.use(async (req, res, next) => {
   try {
     res.locals.nav = await utilities.getNav()
@@ -43,64 +44,49 @@ app.use(async (req, res, next) => {
 // Static routes
 app.use(require("./routes/static"))
 
-
-// Index Route
+// Home
 app.get("/", utilities.handleErrors(baseController.buildHome))
 
 // Inventory routes
 app.use("/inv", require("./routes/inventoryRoute"))
 
 /* ***********************
- * Intentional 500 Error Route (for testing)
+ * ✅ REQUIRED: Footer Error Route
  *************************/
-app.get("/error", (req, res, next) => {
-  next(new Error("Intentional server error"))
+app.get("/inv/trigger-error", (req, res, next) => {
+  next(new Error("Intentional error triggered"))
 })
 
 /* ***********************
- * 404 Route - must be last route
+ * 404 Handler
  *************************/
 app.use((req, res, next) => {
   next({ status: 404, message: "Sorry, we couldn't find that page." })
 })
 
 /* ***********************
- * Express Error Handler
- * Place after all other middleware
+ * Error Handler (MVC compliant)
  *************************/
 app.use(async (err, req, res, next) => {
-  let nav = ""
-  try {
-    nav = await utilities.getNav()
-  } catch (e) {
-    nav = "<p>Navigation unavailable</p>"
-  }
-
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
 
-  let message
-  if (err.status == 404) {
-    message = err.message
-  } else {
-    message = "Oh no! There was a crash. Maybe try a different route?"
-  }
+  let message =
+    err.status == 404
+      ? err.message
+      : "Oh no! There was a crash. Maybe try a different route?"
 
   res.status(err.status || 500).render("errors/error", {
     title: err.status || "Server Error",
     message,
-    nav
+    nav: res.locals.nav || "<p>Navigation unavailable</p>",
   })
 })
 
 /* ***********************
- * Local Server Information
- *************************/
-const port = process.env.PORT || 3000
-const host = process.env.HOST || "localhost"
-
-/* ***********************
  * Server Start
  *************************/
+const port = process.env.PORT || 3000
+
 app.listen(port, () => {
-  console.log(`App running at http://${host}:${port}`)
+  console.log(`Server running on port ${port}`)
 })
