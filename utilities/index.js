@@ -34,7 +34,7 @@ Util.buildClassificationGrid = async function (data) {
         currency: "USD",
       }).format(vehicle.inv_price)
 
-      grid += `<li>
+      grid += `<li class="vehicle-item">
         <a href="/inv/detail/${vehicle.inv_id}">
           <img src="${vehicle.inv_thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">
         </a>
@@ -58,8 +58,8 @@ Util.buildClassificationGrid = async function (data) {
   return grid
 }
 
-/*  REQUIRED: Build Vehicle Detail */
-Util.buildVehicleDetail = async function (vehicle) {
+/* 🔥 FINAL: Build Vehicle Detail */
+Util.buildVehicleDetail = function (vehicle) {
   const price = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -68,23 +68,33 @@ Util.buildVehicleDetail = async function (vehicle) {
   const miles = new Intl.NumberFormat("en-US").format(vehicle.inv_miles)
 
   return `
-    <div class="vehicle-detail">
+    <div class="vehicle-card">
+
       <div class="vehicle-image">
         <img src="${vehicle.inv_image}" alt="${vehicle.inv_make} ${vehicle.inv_model}">
       </div>
 
-      <div class="vehicle-info">
+      <div class="vehicle-details">
         <h2>${vehicle.inv_make} ${vehicle.inv_model}</h2>
+
         <p class="price">${price}</p>
-        <p><strong>Mileage:</strong> ${miles}</p>
-        <p><strong>Color:</strong> ${vehicle.inv_color}</p>
-        <p>${vehicle.inv_description}</p>
+
+        <ul class="vehicle-meta">
+          <li><strong>Mileage:</strong> ${miles} miles</li>
+          <li><strong>Color:</strong> ${vehicle.inv_color}</li>
+          <li><strong>Category:</strong> ${vehicle.classification_name || ""}</li>
+        </ul>
+
+        <p class="description">${vehicle.inv_description}</p>
+
+        <button class="cta-btn">Contact Dealer</button>
       </div>
+
     </div>
   `
 }
 
-/* Error Handler Wrapper */
+/* Error Handler */
 Util.handleErrors = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next)
 

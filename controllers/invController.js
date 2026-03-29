@@ -25,9 +25,9 @@ invController.buildByClassificationId = async function (req, res, next) {
 }
 
 /* ***************************
- * Build inventory detail view
+ * Build inventory detail view 
  * ************************** */
-invController.buildByInventoryId = async function (req, res, next) {
+invController.buildByInvId = async function (req, res, next) {
   try {
     const inv_id = req.params.inv_id
 
@@ -38,12 +38,12 @@ invController.buildByInventoryId = async function (req, res, next) {
     }
 
     const nav = await utilities.getNav()
-    const detail = await utilities.buildVehicleDetail(data)
+    const detailHTML = await utilities.buildVehicleDetail(data)
 
     res.render("inventory/detail", {
       title: `${data.inv_make} ${data.inv_model}`,
       nav,
-      detail,
+      detailHTML,
     })
   } catch (error) {
     next(error)

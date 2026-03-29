@@ -3,16 +3,16 @@ const router = new express.Router()
 const invController = require("../controllers/invController")
 const utilities = require("../utilities/")
 
-//  Route for classification view by classification id
+// Classification view
 router.get(
   "/type/:classificationId",
   utilities.handleErrors(invController.buildByClassificationId)
 )
 
-// Route for vehicle detail view
+// Vehicle detail view 
 router.get(
   "/detail/:inv_id",
-  utilities.handleErrors(invController.buildByInventoryId)
+  utilities.handleErrors(invController.buildByInvId)
 )
 
 module.exports = router
