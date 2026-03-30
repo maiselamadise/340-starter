@@ -5,23 +5,20 @@ const invController = {}
 /* ***************************
  * Build inventory by classification view
  * ************************** */
-invController.buildVehicleDetail = async function (req, res, next) {
+
+invController.buildByClassificationId = async function (req, res, next) {
   try {
-    const inv_id = req.params.inv_id
+    const classification_id = req.params.classificationId
 
-    const data = await invModel.getInventoryById(inv_id)
-
-    if (!data) {
-      throw new Error("Vehicle not found")
-    }
+    const data = await invModel.getInventoryByClassificationId(classification_id)
 
     const nav = await utilities.getNav()
-    const detailHTML = await utilities.buildVehicleDetail(data)
+    const grid = await utilities.buildClassificationGrid(data)
 
-    res.render("inventory/detail", {
-      title: `${data.inv_make} ${data.inv_model}`,
+    res.render("inventory/classification", {
+      title: "Vehicle Classification",
       nav,
-      vehicleDetail: detailHTML
+      grid,
     })
   } catch (error) {
     next(error)

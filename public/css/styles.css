@@ -275,24 +275,45 @@ footer{
    📱 RESPONSIVE
 ============================ */
 
-.vehicle-detail {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+@media (max-width:768px){
+
+  header{
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .hero{
+    flex-direction:column;
+    text-align:center;
+  }
+
+  .info-section{
+    flex-direction:column;
+  }
 }
 
-.vehicle-image img {
-  width: 100%;
-  max-width: 500px;
+/* TABLET */
+@media (min-width:768px){
+
+  #inv-display{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .vehicle-detail{
+    grid-template-columns:1fr 1fr;
+    align-items:center;
+  }
 }
 
-.vehicle-info {
-  flex: 1;
-}
+/* DESKTOP */
+@media (min-width:1024px){
 
-/* Mobile */
-@media (max-width: 600px) {
-  .vehicle-detail {
-    flex-direction: column;
+  #inv-display{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .vehicle-detail{
+    grid-template-columns:1fr 1fr;
+    gap:40px;
   }
 }
