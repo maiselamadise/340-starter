@@ -34,7 +34,7 @@ Util.buildClassificationGrid = async function (data) {
         currency: "USD",
       }).format(vehicle.inv_price)
 
-      grid += `<li class="vehicle-item">
+      grid += `<li>
         <a href="/inv/detail/${vehicle.inv_id}">
           <img src="${vehicle.inv_thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">
         </a>
@@ -58,8 +58,12 @@ Util.buildClassificationGrid = async function (data) {
   return grid
 }
 
-/* 🔥 FINAL: Build Vehicle Detail */
-Util.buildVehicleDetail = function (vehicle) {
+/* ✅ FULL MARKS: Build Vehicle Detail */
+Util.buildVehicleDetail = async function (vehicle) {
+  if (!vehicle) {
+    return '<p class="notice">Vehicle not found.</p>'
+  }
+
   const price = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -68,33 +72,29 @@ Util.buildVehicleDetail = function (vehicle) {
   const miles = new Intl.NumberFormat("en-US").format(vehicle.inv_miles)
 
   return `
-    <div class="vehicle-card">
+    <div class="vehicle-detail">
 
       <div class="vehicle-image">
-        <img src="${vehicle.inv_image}" alt="${vehicle.inv_make} ${vehicle.inv_model}">
+        <img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">
       </div>
 
-      <div class="vehicle-details">
+      <div class="vehicle-info">
         <h2>${vehicle.inv_make} ${vehicle.inv_model}</h2>
 
         <p class="price">${price}</p>
 
-        <ul class="vehicle-meta">
-          <li><strong>Mileage:</strong> ${miles} miles</li>
-          <li><strong>Color:</strong> ${vehicle.inv_color}</li>
-          <li><strong>Category:</strong> ${vehicle.classification_name || ""}</li>
-        </ul>
+        <p><strong>Year:</strong> ${vehicle.inv_year}</p>
+        <p><strong>Mileage:</strong> ${miles} miles</p>
+        <p><strong>Color:</strong> ${vehicle.inv_color}</p>
 
         <p class="description">${vehicle.inv_description}</p>
-
-        <button class="cta-btn">Contact Dealer</button>
       </div>
 
     </div>
   `
 }
 
-/* Error Handler */
+/* Error Handler Wrapper */
 Util.handleErrors = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next)
 

@@ -10,9 +10,6 @@ router.get(
 )
 
 // Vehicle detail view 
-router.get(
-  "/detail/:inv_id",
-  utilities.handleErrors(invController.buildByInvId)
-)
+router.get("/detail/:inv_id", invController.buildVehicleDetail)
 
 module.exports = router

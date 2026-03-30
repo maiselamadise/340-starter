@@ -7,8 +7,22 @@ async function getClassifications() {
     )
     return data.rows
   } catch (error) {
-    console.error("getClassifications error: " + error)
+    console.error("getClassifications error:", error)
     throw error
+  }
+}
+
+async function getInventoryById(inv_id) {
+  try {
+    const sql = `
+      SELECT * 
+      FROM inventory 
+      WHERE inv_id = $1
+    `
+    const result = await pool.query(sql, [inv_id])
+    return result.rows[0]
+  } catch (error) {
+    console.error("getInventoryById error: " + error)
   }
 }
 
@@ -23,20 +37,7 @@ async function getInventoryByClassificationId(classification_id) {
     )
     return data.rows
   } catch (error) {
-    console.error("getInventoryByClassificationId error: " + error)
-    throw error
-  }
-}
-
-async function getInventoryById(inv_id) {
-  try {
-    const data = await pool.query(
-      "SELECT * FROM public.inventory WHERE inv_id = $1",
-      [inv_id]
-    )
-    return data.rows[0]
-  } catch (error) {
-    console.error("getInventoryById error: " + error)
+    console.error("getInventoryByClassificationId error:", error)
     throw error
   }
 }
