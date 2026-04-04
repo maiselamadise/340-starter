@@ -1,10 +1,10 @@
 /* ******************************************
  * Primary server file
  *******************************************/
-const accountRoute = require("./routes/accountRoute")
-const expressLayouts = require("express-ejs-layouts")
-const express = require("express")
 require("dotenv").config()
+
+const express = require("express")
+const expressLayouts = require("express-ejs-layouts")
 
 const session = require("express-session")
 const pgSession = require("connect-pg-simple")(session)
@@ -13,6 +13,8 @@ const flash = require("connect-flash")
 const pool = require("./database/")
 const utilities = require("./utilities/")
 const baseController = require("./controllers/baseController")
+
+const accountRoute = require("./routes/accountRoute")
 
 const app = express()
 
@@ -23,7 +25,9 @@ app.use(express.static("public"))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-// ✅ Session
+/* ***********************
+ * Session (ONLY ONCE ✅)
+ *************************/
 app.use(
   session({
     store: new pgSession({
@@ -37,10 +41,12 @@ app.use(
   })
 )
 
-// ✅ Flash middleware
+/* ***********************
+ * Flash Messages (ONLY ONCE ✅)
+ *************************/
 app.use(flash())
 
-// ✅ Make messages available to ALL views
+// Make messages available in ALL views
 app.use((req, res, next) => {
   res.locals.messages = req.flash()
   next()
@@ -71,18 +77,36 @@ app.use(async (req, res, next) => {
 /* ***********************
  * Routes
  *************************/
+
+// Static routes
 app.use(require("./routes/static"))
+
+// Home
 app.get("/", utilities.handleErrors(baseController.buildHome))
+
+// Inventory routes
 app.use("/inv", require("./routes/inventoryRoute"))
+
+// Account routes
 app.use("/account", accountRoute)
 
 /* ***********************
- * Error Handling
+ * Test Error Route
+ *************************/
+app.get("/inv/trigger-error", (req, res, next) => {
+  next(new Error("Intentional error triggered"))
+})
+
+/* ***********************
+ * 404 Handler
  *************************/
 app.use((req, res, next) => {
   next({ status: 404, message: "Sorry, we couldn't find that page." })
 })
 
+/* ***********************
+ * Error Handler
+ *************************/
 app.use((err, req, res, next) => {
   console.error(`❌ ERROR at ${req.originalUrl}`)
   console.error(err.stack)
@@ -99,7 +123,7 @@ app.use((err, req, res, next) => {
   res.status(status).render("errors/error", {
     title: status,
     message,
-    nav: res.locals.nav,
+    nav: res.locals.nav || "<p>Navigation unavailable</p>",
   })
 })
 
