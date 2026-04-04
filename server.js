@@ -8,6 +8,7 @@ require("dotenv").config()
 
 const session = require("express-session")
 const pgSession = require("connect-pg-simple")(session)
+const flash = require("connect-flash")
 
 const pool = require("./database/")
 const utilities = require("./utilities/")
@@ -22,24 +23,26 @@ app.use(express.static("public"))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-// ✅ FIXED session config
+// ✅ Session
 app.use(
   session({
     store: new pgSession({
       pool,
       createTableIfMissing: true,
     }),
-    secret: process.env.SESSION_SECRET || "devSecret", // fallback prevents crash
+    secret: process.env.SESSION_SECRET || "devSecret",
     resave: false,
     saveUninitialized: false,
     name: "sessionId",
   })
 )
 
-// Express Messages Middleware
-app.use(require('connect-flash')())
-app.use(function(req, res, next){
-  res.locals.messages = require('express-messages')(req, res)
+// ✅ Flash middleware
+app.use(flash())
+
+// ✅ Make messages available to ALL views
+app.use((req, res, next) => {
+  res.locals.messages = req.flash()
   next()
 })
 
@@ -51,7 +54,7 @@ app.use(expressLayouts)
 app.set("layout", "./layouts/layout")
 
 /* ***********************
- * Global Navigation (SAFE)
+ * Global Navigation
  *************************/
 app.use(async (req, res, next) => {
   try {
@@ -60,51 +63,32 @@ app.use(async (req, res, next) => {
     next()
   } catch (error) {
     console.error("NAV ERROR:", error.message)
-    res.locals.nav = "<p>Navigation unavailable</p>" // ✅ prevents crash
-    next() // don't break the app
+    res.locals.nav = "<p>Navigation unavailable</p>"
+    next()
   }
 })
 
 /* ***********************
  * Routes
  *************************/
-
-// Static routes
 app.use(require("./routes/static"))
-
-// Home
 app.get("/", utilities.handleErrors(baseController.buildHome))
-
-// Inventory routes
 app.use("/inv", require("./routes/inventoryRoute"))
-
-// Account routes
 app.use("/account", accountRoute)
 
 /* ***********************
- * Test Error Route
- *************************/
-app.get("/inv/trigger-error", (req, res, next) => {
-  next(new Error("Intentional error triggered"))
-})
-
-/* ***********************
- * 404 Handler
+ * Error Handling
  *************************/
 app.use((req, res, next) => {
   next({ status: 404, message: "Sorry, we couldn't find that page." })
 })
 
-/* ***********************
- * Error Handler (FIXED DEBUG VERSION)
- *************************/
 app.use((err, req, res, next) => {
   console.error(`❌ ERROR at ${req.originalUrl}`)
   console.error(err.stack)
 
   const status = err.status || 500
 
-  // ✅ SHOW REAL ERROR DURING DEVELOPMENT
   const message =
     process.env.NODE_ENV === "development"
       ? err.message
@@ -115,7 +99,7 @@ app.use((err, req, res, next) => {
   res.status(status).render("errors/error", {
     title: status,
     message,
-    nav: res.locals.nav || "<p>Navigation unavailable</p>",
+    nav: res.locals.nav,
   })
 })
 

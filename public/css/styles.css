@@ -291,6 +291,30 @@ footer{
   color: red;
 }
 
+input:required:invalid,
+input:focus:invalid {
+  border: 2px solid red;
+}
+
+input:required:valid {
+  border: 2px solid green;
+}
+
+.password-rules {
+  background: #f4f4f4;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+input:required:invalid {
+  border: 2px solid red;
+}
+
+input:required:valid {
+  border: 2px solid green;
+}
 /* ============================
    📱 RESPONSIVE
 ============================ */

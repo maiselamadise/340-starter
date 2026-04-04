@@ -9,7 +9,7 @@ async function buildLogin(req, res, next) {
   res.render("account/login", {
     title: "Login",
     nav,
-    messages: null // ✅ FIX
+    errors: null
   })
 }
 
@@ -21,7 +21,10 @@ async function buildRegister(req, res, next) {
   res.render("account/register", {
     title: "Register",
     nav,
-    messages: null // ✅ FIX (NOT errors)
+    errors: null,
+    account_firstname: "",
+    account_lastname: "",
+    account_email: ""
   })
 }
 
@@ -31,42 +34,69 @@ async function buildRegister(req, res, next) {
 async function registerAccount(req, res) {
   let nav = await utilities.getNav()
 
-  const {
-    account_firstname,
-    account_lastname,
-    account_email,
-    account_password,
-  } = req.body
+  try {
+    const {
+      account_firstname,
+      account_lastname,
+      account_email,
+      account_password,
+    } = req.body
 
-  const regResult = await accountModel.registerAccount(
-    account_firstname,
-    account_lastname,
-    account_email,
-    account_password
-  )
-
-  if (regResult) {
-    req.flash(
-      "notice",
-      `Congratulations, you're registered ${account_firstname}. Please log in.`
+    const regResult = await accountModel.registerAccount(
+      account_firstname,
+      account_lastname,
+      account_email,
+      account_password
     )
 
-    res.status(201).render("account/login", {
-      title: "Login",
-      nav,
-    })
-  } else {
-    req.flash("notice", "Sorry, the registration failed.")
+    if (regResult) {
+      req.flash(
+        "notice",
+        `Congratulations, you're registered ${account_firstname}. Please log in.`
+      )
 
-    res.status(501).render("account/register", {
+      return res.status(201).render("account/login", {
+        title: "Login",
+        nav,
+        errors: null
+      })
+    } else {
+      req.flash("notice", "Sorry, the registration failed.")
+
+      return res.status(501).render("account/register", {
+        title: "Registration",
+        nav,
+        errors: null,
+        account_firstname,
+        account_lastname,
+        account_email
+      })
+    }
+  } catch (error) {
+    console.error("❌ ERROR at /account/register:", error)
+
+    const {
+      account_firstname,
+      account_lastname,
+      account_email,
+    } = req.body
+
+    return res.status(500).render("account/register", {
       title: "Registration",
       nav,
+      errors: null,
+      account_firstname,
+      account_lastname,
+      account_email
     })
   }
 }
 
+/* ****************************************
+*  EXPORTS (THIS FIXES YOUR CRASH)
+* *************************************** */
 module.exports = {
+  buildLogin,
+  buildRegister,
   registerAccount,
 }
-
-module.exports = { buildLogin, buildRegister }

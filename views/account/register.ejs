@@ -2,12 +2,20 @@
   <h1><%= title %></h1>
 
   <% if (messages) { %>
-    <ul class="flash">
-      <% 
-        let msgArray = Array.isArray(messages) ? messages : [messages];
-        msgArray.forEach(message => { 
-      %>
-        <li><%= message %></li>
+  <ul class="flash">
+    <% Object.keys(messages).forEach(type => { %>
+      <% messages[type].forEach(msg => { %>
+        <li><%= msg %></li>
+      <% }) %>
+    <% }) %>
+  </ul>
+<% } %>
+
+  <!-- ✅ FIXED ERROR DISPLAY -->
+  <% if (errors && errors.array && errors.array().length > 0) { %>
+    <ul class="notice">
+      <% errors.array().forEach(error => { %>
+        <li><%= error.msg %></li>
       <% }) %>
     </ul>
   <% } %>
@@ -19,6 +27,7 @@
       type="text" 
       name="account_firstname" 
       id="account_firstname" 
+      value="<%= account_firstname || '' %>"
       required
     >
 
@@ -27,6 +36,7 @@
       type="text" 
       name="account_lastname" 
       id="account_lastname" 
+      value="<%= account_lastname || '' %>"
       required
     >
 
@@ -35,30 +45,34 @@
       type="email" 
       name="account_email" 
       id="account_email" 
+      value="<%= account_email || '' %>"
       required
     >
 
     <label for="account_password">Password</label>
+
+    <!-- ✅ MOVED PASSWORD RULES ABOVE INPUT -->
+    <div class="password-rules">
+      <p>Password must be at least 12 characters and include:</p>
+      <ul>
+        <li>At least 1 capital letter</li>
+        <li>At least 1 lowercase letter</li>
+        <li>At least 1 number</li>
+        <li>At least 1 special character</li>
+      </ul>
+    </div>
+
     <input 
       type="password" 
       name="account_password" 
       id="account_password" 
       required
-      minlength="12"
-      pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{12,}$"
-      title="Must be at least 12 characters, include a capital letter, number, and special character"
+      pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
+      title="Must be at least 12 characters, include uppercase, lowercase, number, and special character"
     >
 
     <button type="submit">Register</button>
 
   </form>
 
-  <p>Password must be at least 12 characters and include:</p>
-  <ul>
-    <li>At least 1 capital letter</li>
-    <li>At least 1 number</li>
-    <li>At least 1 special character</li>
-  </ul>
-
 </main>
-
