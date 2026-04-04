@@ -1,9 +1,110 @@
-<%- nav %>
+<div class="cse-container">
+  <div class="vehicle-detail-wrapper">
+    <% if (title) { %>
+      <h1 class="welcome-heading">Vehicle Details</h1>
+    <% } %>
+<%- detail %>
+    <div class="featured-vehicle">
+      <div class="vehicle-content">
+        <div class="vehicle-text">
+          <h2 class="vehicle-title"><%= vehicle.inv_year %> <%= vehicle.inv_make %> <%= vehicle.inv_model %></h2>
+          <div class="vehicle-features">
+            <p class="feature-item">Year: <%= vehicle.inv_year %></p>
+            <p class="feature-item">Color: <%= vehicle.inv_color %></p>
+            <p class="feature-item">Mileage: <%= new Intl.NumberFormat("en-US").format(vehicle.inv_miles) %> miles</p>
+          </div>
+          
+          <% if (locals.loggedin && locals.accountData.account_type === "Client") { %>
+            <form action="/purchase/buy" method="post" style="margin-top:15px;">
+              <input type="hidden" name="inv_id" value="<%= vehicle.inv_id %>">
+              <button type="submit" class="own-today-btn">Buy Now</button>
+            </form>
+          <% } %>
+          
+          <% if (locals.loggedin && 
+                 (locals.accountData.account_type === "Admin" || locals.accountData.account_type === "Employee")) { %>
+            <div style="margin-top:15px;">
+              <a href="/purchase/view/<%= vehicle.inv_id %>" class="btn-admin">View Purchases</a>
+            </div>
+          <% } %>
+        </div>
+        <div class="vehicle-image-section">
+          <img src="<%= vehicle.inv_image %>" alt="<%= vehicle.inv_year %> <%= vehicle.inv_make %> <%= vehicle.inv_model %>" class="vehicle-main-image">
+        </div>
+      </div>
+    </div>
 
-<main>
-  <h1><%= title %></h1>
+    <div class="bottom-sections">
+      <div class="vehicle-specs">
+        <h3>Vehicle Specifications</h3>
+        <div class="specs-grid">
+          <div class="spec-card">
+            <div class="spec-icon">🚗</div>
+            <div class="spec-label">Make</div>
+            <div class="spec-value"><%= vehicle.inv_make %></div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-icon">🏷️</div>
+            <div class="spec-label">Model</div>
+            <div class="spec-value"><%= vehicle.inv_model %></div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-icon">📅</div>
+            <div class="spec-label">Year</div>
+            <div class="spec-value"><%= vehicle.inv_year %></div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-icon">🎨</div>
+            <div class="spec-label">Color</div>
+            <div class="spec-value"><%= vehicle.inv_color %></div>
+          </div>
+        </div>
+      </div>
 
-  <div class="detail-container">
-    <%- detail %>
+      <div class="vehicle-description">
+        <h3>Vehicle Description</h3>
+        <div class="description-content">
+          <p><%= vehicle.inv_description %></p>
+          <div class="description-highlights">
+            <p class="highlight">"Perfect for any adventure!"</p>
+            <p class="highlight">"Great condition and ready to drive!"</p>
+            <p class="highlight">"Don't miss out on this amazing deal!"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+     <!-- 🔽 Customer Reviews Section -->
+     <div class="vehicle-reviews">
+      <h3>Customer Reviews</h3>
+
+      <% if (locals.loggedin) { %>
+        <form method="POST" action="/reviews/add">
+          <textarea name="review_text" rows="4" required minlength="5"></textarea>
+          <input type="hidden" name="inv_id" value="<%= vehicle.inv_id %>">
+          <button type="submit">Submit Review</button>
+        </form>
+      <% } else { %>
+        <p><a href="/account/login">Log in</a> to add a review.</p>
+      <% } %>
+
+      <ul>
+        <% reviews.forEach(r => { %>
+          <li>
+            <strong><%= r.account_firstname %> <%= r.account_lastname %>:</strong>
+            <%= r.review_text %> 
+            <em>(<%= r.review_date.toLocaleDateString() %>)</em>
+
+            <% if (locals.accountData && 
+                  (locals.accountData.account_type === "Admin" || locals.accountData.account_type === "Employee")) { %>
+              <form method="POST" action="/reviews/delete" style="display:inline">
+                <input type="hidden" name="review_id" value="<%= r.review_id %>">
+                <input type="hidden" name="inv_id" value="<%= vehicle.inv_id %>">
+                <button type="submit">Delete</button>
+              </form>
+            <% } %>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
   </div>
-</main>
+</div>

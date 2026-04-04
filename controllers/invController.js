@@ -5,7 +5,6 @@ const invController = {}
 /* ***************************
  * Build inventory by classification view
  * ************************** */
-
 invController.buildByClassificationId = async function (req, res, next) {
   try {
     const classification_id = req.params.classificationId
@@ -16,9 +15,9 @@ invController.buildByClassificationId = async function (req, res, next) {
     const grid = await utilities.buildClassificationGrid(data)
 
     res.render("inventory/classification", {
-      title: "Vehicle Classification",
+      title: "Inventory By Classification",
       nav,
-      grid,
+      grid,   // ✅ MATCHES VIEW
     })
   } catch (error) {
     next(error)
@@ -28,24 +27,35 @@ invController.buildByClassificationId = async function (req, res, next) {
 /* ***************************
  * Build inventory detail view 
  * ************************** */
-invController.buildVehicleDetail = async function (req, res, next) {
+invController.buildByInventoryId = async function (req, res, next) {
   try {
-    const inv_id = req.params.inv_id
+    const inv_id = req.params.inv_id   // ✅ MATCHES ROUTE
 
     const data = await invModel.getInventoryById(inv_id)
 
-    const detailHTML = await utilities.buildVehicleDetail(data)
+    if (!data) {
+      return next({ status: 404, message: "Vehicle not found" })
+    }
 
     const nav = await utilities.getNav()
+   const detailHTML = utilities.buildVehicleDetailHTML(data)
 
     res.render("inventory/detail", {
-      title: `${data.inv_make} ${data.inv_model}`,
+      title: `${data.inv_year} ${data.inv_make} ${data.inv_model}`,
       nav,
-      detail: detailHTML
+      detailHTML,   // ✅ MATCHES VIEW
     })
+
   } catch (error) {
     next(error)
   }
+}
+
+/* ***************************
+ * Intentional Error
+ * ************************** */
+invController.triggerError = function (req, res, next) {
+  throw new Error("Intentional 500 error")
 }
 
 module.exports = invController

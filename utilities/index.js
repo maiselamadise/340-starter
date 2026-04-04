@@ -2,7 +2,9 @@ const invModel = require("../models/inventory-model")
 
 const Util = {}
 
-/* Build Navigation */
+/* ***************************
+ * Build Navigation
+ * ************************** */
 Util.getNav = async function () {
   let data = await invModel.getClassifications()
 
@@ -21,7 +23,9 @@ Util.getNav = async function () {
   return list
 }
 
-/* Build Grid */
+/* ***************************
+ * Build Classification Grid
+ * ************************** */
 Util.buildClassificationGrid = async function (data) {
   let grid = ""
 
@@ -58,44 +62,34 @@ Util.buildClassificationGrid = async function (data) {
   return grid
 }
 
-/* ✅ FULL MARKS: Build Vehicle Detail */
-Util.buildVehicleDetail = async function (vehicle) {
-  if (!vehicle) {
-    return '<p class="notice">Vehicle not found.</p>'
-  }
-
-  const price = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(vehicle.inv_price)
-
-  const miles = new Intl.NumberFormat("en-US").format(vehicle.inv_miles)
-
+/* ***************************
+ * Build Vehicle Detail HTML
+ * ************************** */
+Util.buildVehicleDetailHTML = function (vehicle) {
   return `
-    <div class="vehicle-detail">
-
-      <div class="vehicle-image">
-        <img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">
+    <div class="vehicle-detail-container">
+      <div class="vehicle-image-section">
+        <img src="${vehicle.inv_image}" alt="${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}" class="vehicle-detail-image">
       </div>
 
-      <div class="vehicle-info">
-        <h2>${vehicle.inv_make} ${vehicle.inv_model}</h2>
-
-        <p class="price">${price}</p>
-
-        <p><strong>Year:</strong> ${vehicle.inv_year}</p>
-        <p><strong>Mileage:</strong> ${miles} miles</p>
+      <div class="vehicle-info-section">
+        <h1>${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}</h1>
+        <p><strong>Price:</strong> $${new Intl.NumberFormat("en-US").format(vehicle.inv_price)}</p>
+        <p><strong>Mileage:</strong> ${new Intl.NumberFormat("en-US").format(vehicle.inv_miles)} miles</p>
         <p><strong>Color:</strong> ${vehicle.inv_color}</p>
-
-        <p class="description">${vehicle.inv_description}</p>
+        <p>${vehicle.inv_description}</p>
       </div>
-
     </div>
   `
 }
 
-/* Error Handler Wrapper */
-Util.handleErrors = (fn) => (req, res, next) =>
-  Promise.resolve(fn(req, res, next)).catch(next)
+/* ***************************
+ * Error Handler Wrapper
+ * ************************** */
+Util.handleErrors = function (fn) {
+  return function (req, res, next) {
+    Promise.resolve(fn(req, res, next)).catch(next)
+  }
+}
 
 module.exports = Util

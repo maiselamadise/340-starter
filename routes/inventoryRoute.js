@@ -9,7 +9,13 @@ router.get(
   utilities.handleErrors(invController.buildByClassificationId)
 )
 
-// Vehicle detail view 
-router.get("/detail/:inv_id", invController.buildVehicleDetail)
+// Public route: inventory detail (site visitors)
+router.get(
+  "/detail/:invId",
+  utilities.handleErrors(invController.buildVehicleDetail)
+)
+router.get("/error", (req, res, next) => {
+  throw new Error("Intentional 500 error")
+})
 
 module.exports = router
