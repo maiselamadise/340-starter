@@ -15,5 +15,10 @@ router.get(
   "/register",
   utilities.handleErrors(accountController.buildRegister)
 )
+// NEW: Handle registration form submission
+router.post(
+  "/register",
+  utilities.handleErrors(accountController.registerAccount)
+)
 
 module.exports = router
