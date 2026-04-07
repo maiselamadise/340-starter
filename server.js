@@ -124,3 +124,8 @@ const port = process.env.PORT || 3000
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
 })
+
+require("dotenv").config()
+
+const path = require("path")
+app.use(express.static(path.join(__dirname, "public")))
