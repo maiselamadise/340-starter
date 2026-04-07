@@ -1,137 +1,123 @@
-/* ******************************************
- * Primary server file
- *******************************************/
-require("dotenv").config()
 
+/* ******************************************
+ * This server.js file is the primary file of the 
+ * application. It is used to control the project.
+ *******************************************/
+/* ***********************
+ * Require Statements
+ *************************/
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
-
-const session = require("express-session")
-const pgSession = require("connect-pg-simple")(session)
-const flash = require("connect-flash")
-
-const pool = require("./database/")
-const utilities = require("./utilities/")
+const env = require("dotenv").config()
+const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
-
+const utilities = require("./utilities/")
+const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
-
+const session = require("express-session")
+const pool = require('./database/')
+const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
 const app = express()
 
 /* ***********************
- * Middleware
- *************************/
-app.use(express.static("public"))
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-
-/* ***********************
- * Session (ONLY ONCE ✅)
- *************************/
-app.use(
-  session({
-    store: new pgSession({
-      pool,
-      createTableIfMissing: true,
-    }),
-    secret: process.env.SESSION_SECRET || "devSecret",
-    resave: false,
-    saveUninitialized: false,
-    name: "sessionId",
-  })
-)
-
-/* ***********************
- * Flash Messages (ONLY ONCE ✅)
- *************************/
-app.use(flash())
-
-// Make messages available in ALL views
-app.use((req, res, next) => {
-  res.locals.messages = req.flash()
-  next()
-})
-
-/* ***********************
- * View Engine
+ * View Engine and Templates
  *************************/
 app.set("view engine", "ejs")
 app.use(expressLayouts)
-app.set("layout", "./layouts/layout")
+app.set("layout", "./layouts/layout") // not at views root
+
+
 
 /* ***********************
- * Global Navigation
- *************************/
-app.use(async (req, res, next) => {
-  try {
-    const nav = await utilities.getNav()
-    res.locals.nav = nav || "<p>No navigation available</p>"
-    next()
-  } catch (error) {
-    console.error("NAV ERROR:", error.message)
-    res.locals.nav = "<p>Navigation unavailable</p>"
-    next()
-  }
-})
+ * Middleware
+ * ************************/
+app.use(session({
+  store: new(require('connect-pg-simple')(session))({
+    createTableIfMissing: true,
+    pool,
+}),
+secret: process.env.SESSION_SECRET,
+resave: true,
+saveUninitialized: true,
+name: 'sessionId',
+}))
 
+// Express Messages Middleware
+app.use(require('connect-flash')())
+app.use(function(req, res, next) {
+  res.locals.messages = require('express-messages')(req, res)
+  next()
+})
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded 
+app.use(cookieParser())
+app.use(utilities.checkJWTToken)
 /* ***********************
  * Routes
  *************************/
-
-// Static routes
-app.use(require("./routes/static"))
-
-// Home
+app.use(static)
+//app.get("/", baseController.buildHome)
 app.get("/", utilities.handleErrors(baseController.buildHome))
 
+/* ***********************
+ * Routes with Error Handling
+ *************************/
+app.use(express.static("public"))
+
 // Inventory routes
+//app.use("/inv", inventoryRoute)
 app.use("/inv", require("./routes/inventoryRoute"))
 
-// Account routes
-app.use("/account", accountRoute)
+
+// Account routes 
+//app.use("/account", accountRoute)
+app.use("/account", require("./routes/accountRoute"))
+
+
+// // 404 Error Handler - must be after all other routes
+// app.use((req, res, next) => {
+//   const error = new Error(`Page not found: ${req.originalUrl}`)
+//   error.status = 404
+//   next(error)
+// })
 
 /* ***********************
- * Test Error Route
+ * Global Error Handling Middleware (Task 2)
  *************************/
-app.get("/inv/trigger-error", (req, res, next) => {
-  next(new Error("Intentional error triggered"))
-})
+app.use(async (err, req, res, next) => {
+  console.error("Error occurred:", err.stack)
 
-/* ***********************
- * 404 Handler
- *************************/
-app.use((req, res, next) => {
-  next({ status: 404, message: "Sorry, we couldn't find that page." })
-})
-
-/* ***********************
- * Error Handler
- *************************/
-app.use((err, req, res, next) => {
-  console.error(`❌ ERROR at ${req.originalUrl}`)
-  console.error(err.stack)
+  let nav = ""
+  try {
+    nav = await utilities.getNav()
+  } catch (navError) {
+    console.error("Error getting navigation:", navError)
+    nav = "<ul><li><a href='/'>Home</a></li></ul>"
+  }
 
   const status = err.status || 500
-
-  const message =
-    process.env.NODE_ENV === "development"
-      ? err.message
-      : status === 404
-      ? err.message
-      : "Oh no! There was a crash. Maybe try a different route?"
+  const message = err.message || "Something went wrong. Please try again later."
 
   res.status(status).render("errors/error", {
-    title: status,
-    message,
-    nav: res.locals.nav || "<p>Navigation unavailable</p>",
+    title: `Error ${status}`,
+    nav: nav,
+    message: message,
+    status: status,
+    layout: "./layouts/layout",
   })
 })
 
 /* ***********************
- * Server Start
+ * Local Server Information
+ * Values from .env (environment) file
  *************************/
-const port = process.env.PORT || 3000
+const port = process.env.PORT
+const host = process.env.HOST
 
+/* ***********************
+ * Log statement to confirm server operation
+ *************************/
 app.listen(port, () => {
-  console.log(`✅ Server running on port ${port}`)
+  console.log(`app listening on ${host}:${port}`)
 })

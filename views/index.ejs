@@ -1,75 +1,24 @@
 <h1>Welcome to CSE Motors!</h1>
 
-<% if (messages) { %>
-  <ul class="flash">
-    <% Object.keys(messages).forEach(type => { %>
-      <% messages[type].forEach(msg => { %>
-        <li class="<%= type %>"><%= msg %></li>
-      <% }) %>
-    <% }) %>
+<%- messages() %>
+
+<section id="hero">
+  <ul>
+    <li>
+      <h2>DMC Delorean</h2>
+    </li>
+    <li>3 Cup holders</li>
+    <li>Superman doors</li>
+    <li>Fuzzy dice!</li>
+    <li><button id="actionbtn">Own Today</button></li>
   </ul>
-<% } %>
-
-<section class="hero">
-
-  <div class="hero-text">
-
-    <h2>DMC Delorean</h2>
-
-    <ul>
-      <li>3 Cup holders</li>
-      <li>Superman doors</li>
-      <li>Fuzzy dice!</li>
-    </ul>
-
-    <button>Own Today</button>
-
-  </div>
-
-  <div class="hero-image">
-    <img src="/images/delorean.jpg" alt="Delorean">
-  </div>
-
+  <!-- <div class="car-image">
+    <img src="/images/vehicles/delorean.jpg" alt="DMC Delorean">
+  </div> -->
 </section>
-
-
-<section class="info-section">
-
-  <div class="upgrades">
-
-    <h2>Delorean Upgrades</h2>
-
-    <div class="upgrade-grid">
-
-      <div class="upgrade">
-        <img src="/images/upgrades/flux-cap.png" alt="">
-        <a href="#">Flux Capacitor</a>
-      </div>
-
-      <div class="upgrade">
-        <img src="/images/upgrades/flame.jpg" alt="">
-        <a href="#">Flame Decals</a>
-      </div>
-
-      <div class="upgrade">
-        <img src="/images/upgrades/bumper_sticker.jpg" alt="">
-        <a href="#">Bumper Stickers</a>
-      </div>
-
-      <div class="upgrade">
-        <img src="/images/upgrades/hub-cap.jpg" alt="">
-        <a href="#">Hub Caps</a>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div class="reviews">
-
+<div class="flex-content">
+  <section id="review">
     <h2>DMC Delorean Reviews</h2>
-
     <ul>
       <li>"So fast it's almost like traveling in time." (4/5)</li>
       <li>"Coolest ride on the road." (4/5)</li>
@@ -77,7 +26,47 @@
       <li>"The most futuristic ride of our day." (4.5/5)</li>
       <li>"80's livin and I love it!" (5/5)</li>
     </ul>
-
-  </div>
-
-</section>
+  </section>
+  <section id="add-ons">
+    <h2>Delorean Upgrades</h2>
+    <div class="flex">
+      <a href="#" title="flux-capacitor">
+        <figure>
+          <div class="add-col">
+            <img src="./images/upgrades/flux-cap.png" alt="Flux-Capacitor">
+          </div>
+          <figcaption>Flux Capacitor</figcaption>
+        </figure>
+      </a>
+      <a href="#" title="flame decals">
+        <figure>
+          <div class="add-col">
+            <img src="./images/upgrades/flame.jpg" alt="flame decal">
+          </div>
+          <figcaption>Flame Decals</figcaption>
+        </figure>
+      </a>
+    </div>
+    <div class="flex">
+      <a href="#" title="bumper stickers">
+        <figure>
+          <div class="add-col">
+            <img
+              src="./images/upgrades/bumper_sticker.jpg"
+              alt="Bumper Stickers"
+            >
+          </div>
+          <figcaption>Bumper Stickers</figcaption>
+        </figure>
+      </a>
+      <a href="#" title="hub caps">
+        <figure>
+          <div class="add-col">
+            <img src="./images/upgrades/hub-cap.jpg" alt="Hub Caps">
+          </div>
+          <figcaption>Hub Caps</figcaption>
+        </figure>
+      </a>
+    </div>
+  </section>
+</div>

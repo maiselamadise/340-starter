@@ -1,34 +1,206 @@
+<div class="cse-container">
+  <div class="login-wrapper">
+    <h1 class="page-title"><%= title %></h1>
+    
+    <!-- Flash Messages -->
+    <%- messages() %>
+    
+    <div class="login-form-container">
+      <form id="loginForm" action="/account/login" method="post" class="login-form">
+        <div class="form-group">
+          <label for="account_email">Email Address:</label>
+          <input 
+            type="email" 
+            id="account_email" 
+            name="account_email" 
+            required
+            placeholder="Enter your email address"
+          >
+        </div>
+        
+        <div class="form-group">
+          <label for="account_password">Password:</label>
+          <input 
+            type="password" 
+            id="account_password" 
+            name="account_password" 
+            required
+            placeholder="Enter your password"
+          >
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn-login">Sign In</button>
+        </div>
+      </form>
+      
+      <div class="register-link">
+        <p>Don't have an account? <a href="/account/register">Create a new account</a></p>
+      </div>
+    </div>
+  </div>
+</div>
 
+<style>
+/* CSE Motors Login Page Styling */
+.cse-container {
+  background: white;
+  border: 8px solid;
+  border-image: repeating-linear-gradient(
+    45deg,
+    #000 0px,
+    #000 10px,
+    #fff 10px,
+    #fff 20px
+  ) 8;
+  min-height: 80vh;
+  margin: 20px;
+  position: relative;
+}
 
-<main>
-  <h1><%= title %></h1>
+.login-wrapper {
+  padding: 40px;
+  background: white;
+  max-width: 500px;
+  margin: 0 auto;
+}
 
-  <% if (messages) { %>
-    <ul class="flash">
-      <% 
-        let msgArray = Array.isArray(messages) ? messages : [messages];
-        msgArray.forEach(message => { 
-      %>
-        <li><%= message %></li>
-      <% }) %>
-    </ul>
-  <% } %>
+.page-title {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: bold;
+}
 
-  <form action="/account/login" method="post" class="login-form">
+.login-form-container {
+  background: #f8f9fa;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
 
-    <label for="account_email">Email</label>
-    <input type="email" name="account_email" id="account_email" required>
+.login-form {
+  margin-bottom: 25px;
+}
 
-    <label for="account_password">Password</label>
-    <input type="password" name="account_password" id="account_password" required>
+.form-group {
+  margin-bottom: 20px;
+}
 
-    <button type="submit">Login</button>
+.form-group label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
 
-  </form>
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  background: white;
+}
 
-  <p>
-    Don't have an account?
-    <a href="/account/register">Register here</a>
-  </p>
-</main>
+.form-group input:focus {
+  outline: none;
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
+}
 
+.form-group input:required {
+  border-left: 4px solid #00bcd4;
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.btn-login {
+  background: linear-gradient(135deg, #00bcd4, #00acc1);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 200px;
+}
+
+.btn-login:hover {
+  background: linear-gradient(135deg, #00acc1, #00838f);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+}
+
+.btn-login:active {
+  transform: translateY(0);
+}
+
+.register-link {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #dee2e6;
+}
+
+.register-link p {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.register-link a {
+  color: #00bcd4;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+  color: #00acc1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cse-container {
+    margin: 10px;
+    border-width: 4px;
+  }
+  
+  .login-wrapper {
+    padding: 20px;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+  }
+  
+  .login-form-container {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.8rem;
+  }
+  
+  .form-group input {
+    padding: 10px 12px;
+  }
+  
+  .btn-login {
+    width: 100%;
+    max-width: none;
+  }
+}
+</style>
+<script src="../../js/accpu.js"></script>
