@@ -6,36 +6,47 @@ const Util = {}
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
-Util.getNav = async (req, res, next) => {
+Util.getNav = async () => {
   try {
     const data = await invModel.getClassifications()
+
+    //  (case-insensitive)
+    const uniqueClassifications = [
+      ...new Map(
+        data.rows.map(row => [
+          row.classification_name.toLowerCase(), // key
+          row // value
+        ])
+      ).values()
+    ]
+
     let list = "<ul>"
     list += '<li><a href="/" title="Home page">Home</a></li>'
-    data.rows.forEach((row) => {
+
+    uniqueClassifications.forEach((row) => {
       list += "<li>"
-      list +=
-        '<a href="/inv/type/' +
-        row.classification_id +
-        '" title="See our inventory of ' +
-        row.classification_name +
-        ' vehicles">' +
-        row.classification_name +
-        "</a>"
+      list += `
+        <a href="/inv/type/${row.classification_id}" 
+           title="See our inventory of ${row.classification_name} vehicles">
+           ${row.classification_name}
+        </a>
+      `
       list += "</li>"
     })
+
     list += "</ul>"
     return list
+
   } catch (error) {
     console.error("getNav error:", error)
     throw error
   }
 }
-
 /* **************************************
  * Build the classification view HTML
  * ************************************ */
 Util.buildClassificationGrid = async (data) => {
-  let grid
+  let grid = "" // Initialize grid as an empty string
   if (data.length > 0) {
     grid = '<ul id="inv-display">'
     data.forEach((vehicle) => {

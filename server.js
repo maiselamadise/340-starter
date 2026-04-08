@@ -27,7 +27,7 @@ const flash = require("connect-flash")
 const app = express()
 
 /* ***********************
- * Static Files (🔥 FIX - MUST BE FIRST)
+ * Static Files 
  *************************/
 app.use(express.static(path.join(__dirname, "public")))
 
