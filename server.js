@@ -1,6 +1,5 @@
 /* ******************************************
- * This server.js file is the primary file of the 
- * application. It is used to control the project.
+ * Primary server file
  *******************************************/
 
 /* ***********************
@@ -9,6 +8,7 @@
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 require("dotenv").config()
+const path = require("path")
 
 const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
@@ -27,7 +27,12 @@ const flash = require("connect-flash")
 const app = express()
 
 /* ***********************
- * View Engine and Templates
+ * Static Files (🔥 FIX - MUST BE FIRST)
+ *************************/
+app.use(express.static(path.join(__dirname, "public")))
+
+/* ***********************
+ * View Engine
  *************************/
 app.set("view engine", "ejs")
 app.use(expressLayouts)
@@ -71,17 +76,11 @@ app.use(static)
 
 app.get("/", utilities.handleErrors(baseController.buildHome))
 
-// Static files
-app.use(express.static("public"))
-
-// Inventory routes
 app.use("/inv", inventoryRoute)
-
-// Account routes
 app.use("/account", accountRoute)
 
 /* ***********************
- * 404 Handler (optional but recommended)
+ * 404 Handler
  *************************/
 app.use((req, res, next) => {
   const error = new Error(`Page not found: ${req.originalUrl}`)
@@ -119,13 +118,8 @@ app.use(async (err, req, res, next) => {
 /* ***********************
  * Server
  *************************/
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 5500
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
 })
-
-require("dotenv").config()
-
-const path = require("path")
-app.use(express.static(path.join(__dirname, "public")))
