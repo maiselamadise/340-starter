@@ -1,5 +1,9 @@
 
-
+<% if (title) { %>
+  <h1 class="page-title"><%= title %></h1>
+<% } else {
+  res.redirect('/')
+} %>
 
 <!-- Display client-side validation errors -->
 <%- messages() %>
