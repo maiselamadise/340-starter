@@ -16,5 +16,4 @@ baseController.buildHome = async (req, res, next) => {
 }
 
 
-
 module.exports = baseController

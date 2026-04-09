@@ -9,28 +9,38 @@ const Util = {}
 Util.getNav = async (req, res, next) => {
   try {
     const data = await invModel.getClassifications()
-    let list = "<ul>"
+
+    let list = '<ul>'
     list += '<li><a href="/" title="Home page">Home</a></li>'
+
+    //  Track unique names (case-insensitive)
+    const seen = new Set()
+
     data.rows.forEach((row) => {
-      list += "<li>"
-      list +=
-        '<a href="/inv/type/' +
-        row.classification_id +
-        '" title="See our inventory of ' +
-        row.classification_name +
-        ' vehicles">' +
-        row.classification_name +
-        "</a>"
-      list += "</li>"
+      const name = row.classification_name.trim()
+
+      // Normalize for comparison (lowercase)
+      const normalized = name.toLowerCase()
+
+     
+      if (seen.has(normalized)) return
+
+      seen.add(normalized)
+
+      list += `<li>
+        <a href="/inv/type/${row.classification_id}" 
+           title="See our inventory of ${name} vehicles">
+           ${name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
+        </a>
+      </li>`
     })
+
     list += "</ul>"
     return list
   } catch (error) {
     console.error("getNav error:", error)
-    throw error
   }
 }
-
 /* **************************************
  * Build the classification view HTML
  * ************************************ */
