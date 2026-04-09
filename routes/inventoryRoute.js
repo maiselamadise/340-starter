@@ -1,66 +1,76 @@
-// Needed Resources
 const express = require("express")
 const router = new express.Router()
+
 const invController = require("../controllers/invController")
-const utilities = require("../utilities/index")
+const utilities = require("../utilities")
 
+/* ***************************
+ * PUBLIC ROUTES (NO PROTECTION)
+ *************************** */
 
+// Classification view
+router.get(
+  "/type/:classificationId",
+  utilities.handleErrors(invController.buildByClassificationId)
+)
 
-// Route to build inventory by classification
-router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId))
+// Vehicle detail view
+router.get(
+  "/detail/:invId",
+  utilities.handleErrors(invController.buildByInventoryId)
+)
 
-// Route to deliver inventory item details (Task 1)
-router.get("/detail/:invId", utilities.handleErrors(invController.buildByInventoryId))
+/* ***************************
+ * PROTECTED ROUTES (ADMIN/EMPLOYEE ONLY)
+ *************************** */
 
-router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON));
+// Inventory management view
+router.get(
+  "/",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.manageInventory)
+)
 
-router.get("/edit/:inv_id", utilities.handleErrors(invController.editInventory));
+// Add classification view
+router.get(
+  "/add-classification",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.addClassification)
+)
 
+// Process classification
+router.post(
+  "/add-classification",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.addVehicleByClassificationName)
+)
 
-//Route to build inventory management view
-//router.get("/add-vehicle", utilities.handleErrors(invController.buildInventory)); 
-router.get("/", utilities.handleErrors(invController.manageInventory)); 
+// Add vehicle view
+router.get(
+  "/add-vehicle",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.addInventory)
+)
 
-//Route to classification
-router.get("/add-classification", utilities.handleErrors(invController.addClassification));
+// Process vehicle
+router.post(
+  "/add-vehicle",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.addNewInventoryVehicle)
+)
 
-//Route to classification post
+// Edit inventory
+router.get(
+  "/edit/:inv_id",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.editInventory)
+)
 
-router.post("/add-classification", utilities.handleErrors(invController.addVehicleByClassificationName)); 
-
-// Route to build inventory view for new vehical
-router.get("/add-vehicle", utilities.handleErrors(invController.addInventory));  
-
-// Route to build inventory view for new vehical post
-router.post("/add-vehicle", utilities.handleErrors(invController.addNewInventoryVehicle)); 
-
-
-
-// router.get("/", invController.buildInventory)addClassification
-
-//router.get("/add-classification", invController.addClassification)
-
-// router.get("/add-vehicle", invController.addInventory)
-
-
-// // Route to build inventory by classification view
-// router.get("/type/:classificationId", invController.buildByClassificationId);
-
-// Route to build details of vehicle view
-// router.get("/detail/:inv_id", invController.buildbyInvId);
-
-// router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON));
-
-// router.get("/edit/:inv_id", utilities.handleErrors(invController.editInventory));
-
-// router.post("/add-classification", classValidate.classificationRules(), classValidate.checkClassificationData, invController.addNewClassification);
-
-// router.post("/add-inventory", classValidate.inventoryRules(), classValidate.checkInventoryData, invController.addNewInventory);
-
-// router.post("/update", classValidate.newInventoryRules(), classValidate.checkUpdateData, invController.updateInventory);
-
-// module.exports = router;
-
-
+// Inventory JSON (optional to protect)
+router.get(
+  "/getInventory/:classification_id",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.getInventoryJSON)
+)
 
 module.exports = router

@@ -1,28 +1,27 @@
-/* *********************************
- * Account routes
- * ********************************/
-
 const express = require("express")
 const router = new express.Router()
+
 const accountController = require("../controllers/accountController")
-const utilities = require("../utilities/index")
-const regValidate = require('../utilities/account-validation')
-
-
+const utilities = require("../utilities")
+const regValidate = require("../utilities/account-validation")
 
 /* *********************************
- * Deliver Account Management View
- * ********************************/
-router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildManagement))
+ * Account Management View
+ ******************************** */
+router.get(
+  "/",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildManagement)
+)
 
 /* *********************************
- * Deliver Login View
- * ********************************/
+ * Login View
+ ******************************** */
 router.get("/login", utilities.handleErrors(accountController.buildLogin))
 
 /* *********************************
- * Process the login request
- * ********************************/
+ * Process Login
+ ******************************** */
 router.post(
   "/login",
   regValidate.loginRules(),
@@ -31,51 +30,52 @@ router.post(
 )
 
 /* *********************************
- * Deliver Registration View
- * ********************************/
+ * Registration View
+ ******************************** */
 router.get("/register", utilities.handleErrors(accountController.buildRegister))
 
 /* *********************************
  * Process Registration
- * ********************************/
+ ******************************** */
 router.post(
-    "/register", 
-    regValidate.registrationRules(),
-    regValidate.checkRegData,
-    utilities.handleErrors(accountController.registerAccount)
+  "/register",
+  regValidate.registrationRules(),
+  regValidate.checkRegData,
+  utilities.handleErrors(accountController.registerAccount)
 )
 
 /* *********************************
- * Deliver Update Account View
- * ********************************/
-router.get("/update/:account_id", utilities.handleErrors(accountController.buildUpdateAccount))
+ * Update Account View
+ ******************************** */
+router.get(
+  "/update/:account_id",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildUpdateAccount)
+)
 
 /* *********************************
- * Process Update Account
- * ********************************/
+ * Process Account Update
+ ******************************** */
 router.post(
-  "/update", 
+  "/update",
+  utilities.checkLogin,
   regValidate.updateAccountRules(),
-  // regValidate.updatePasswordRules(),
-  utilities.handleErrors(accountController.updateAccount))
+  utilities.handleErrors(accountController.updateAccount)
+)
 
 /* *********************************
- * Process Update Password
- * ********************************/
+ * Process Password Update
+ ******************************** */
 router.post(
-  "/update-password", 
+  "/update-password",
+  utilities.checkLogin,
   regValidate.updatePasswordRules(),
-  utilities.handleErrors(accountController.updatePassword))
+  utilities.handleErrors(accountController.updatePassword)
+)
 
 /* *********************************
- * Process logout request
- * ********************************/
-router.get("/logout", utilities.handleErrors(accountController.logoutAccount))
-
-
-
-
-
-
+ * Logout
+ ******************************** */
+router.get("/logout", accountController.logoutAccount)
 
 module.exports = router
