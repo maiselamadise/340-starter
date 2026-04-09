@@ -33,14 +33,17 @@ app.set("layout", "./layouts/layout") // not at views root
  * Middleware
  * ************************/
 app.use(session({
-  store: new(require('connect-pg-simple')(session))({
+  store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
     pool,
-}),
-secret: process.env.SESSION_SECRET,
-resave: true,
-saveUninitialized: true,
-name: 'sessionId',
+  }),
+  secret: process.env.SESSION_SECRET || "devSecret123",
+  resave: false,
+  saveUninitialized: false,
+  name: 'sessionId',
+  cookie: {
+    secure: false // change to true ONLY if using HTTPS
+  }
 }))
 
 // Express Messages Middleware
@@ -112,12 +115,12 @@ app.use(async (err, req, res, next) => {
  * Local Server Information
  * Values from .env (environment) file
  *************************/
-const port = process.env.PORT
-const host = process.env.HOST
+const PORT = process.env.PORT || 3000
 
 /* ***********************
  * Log statement to confirm server operation
  *************************/
-app.listen(port, () => {
-  console.log(`app listening on ${host}:${port}`)
+app.listen(PORT, () => {
+  console.log(`App running on port ${PORT}`)
 })
+
