@@ -9,8 +9,11 @@ require("dotenv").config()
  * Login View
  **************************************** */
 async function buildLogin(req, res) {
+  let nav = await utilities.getNav()
   res.render("account/login", {
     title: "Login",
+    nav,
+    errors: null,
   })
 }
 
@@ -18,8 +21,10 @@ async function buildLogin(req, res) {
  * Register View
  **************************************** */
 async function buildRegister(req, res) {
+  let nav = await utilities.getNav()
   res.render("account/register", {
     title: "Register",
+    nav,
     errors: null,
   })
 }
@@ -28,7 +33,13 @@ async function buildRegister(req, res) {
  * Register Account
  **************************************** */
 async function registerAccount(req, res) {
-  const { account_firstname, account_lastname, account_email, account_password } = req.body
+  let nav = await utilities.getNav()
+  const {
+    account_firstname,
+    account_lastname,
+    account_email,
+    account_password,
+  } = req.body
 
   try {
     const hashedPassword = await bcrypt.hash(account_password, 10)
@@ -46,11 +57,18 @@ async function registerAccount(req, res) {
     }
 
     req.flash("notice", "Registration failed.")
-    return res.redirect("/account/register")
+    return res.render("account/register", {
+      title: "Register",
+      nav,
+    })
 
   } catch (error) {
+    console.error(error)
     req.flash("notice", "Error processing registration.")
-    return res.redirect("/account/register")
+    return res.render("account/register", {
+      title: "Register",
+      nav,
+    })
   }
 }
 
@@ -58,34 +76,56 @@ async function registerAccount(req, res) {
  * Login
  **************************************** */
 async function accountLogin(req, res) {
+  let nav = await utilities.getNav()
   const { account_email, account_password } = req.body
 
-  const account = await accountModel.getAccountByEmail(account_email)
-
-  if (!account) {
-    req.flash("notice", "Invalid credentials.")
-    return res.redirect("/account/login")
-  }
-
   try {
-    if (await bcrypt.compare(account_password, account.account_password)) {
+    const account = await accountModel.getAccountByEmail(account_email)
 
-      delete account.account_password
-
-      const token = jwt.sign(account, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "1h",
+    if (!account) {
+      req.flash("notice", "Invalid credentials.")
+      return res.render("account/login", {
+        title: "Login",
+        nav,
       })
-
-      res.cookie("jwt", token, { httpOnly: true })
-
-      return res.redirect("/account/")
     }
 
-    req.flash("notice", "Invalid credentials.")
-    return res.redirect("/account/login")
+    const match = await bcrypt.compare(
+      account_password,
+      account.account_password
+    )
+
+    if (!match) {
+      req.flash("notice", "Invalid credentials.")
+      return res.render("account/login", {
+        title: "Login",
+        nav,
+      })
+    }
+
+    delete account.account_password
+
+    const token = jwt.sign(
+      {
+        account_id: account.account_id,
+        account_email: account.account_email,
+        account_type: account.account_type,
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1h" }
+    )
+
+    res.cookie("jwt", token, { httpOnly: true })
+
+    return res.redirect("/account/")
 
   } catch (error) {
-    throw new Error("Login failed")
+    console.error(error)
+    req.flash("notice", "Login error. Try again.")
+    return res.render("account/login", {
+      title: "Login",
+      nav,
+    })
   }
 }
 
@@ -93,17 +133,22 @@ async function accountLogin(req, res) {
  * Update View
  **************************************** */
 async function buildUpdateAccount(req, res) {
+  let nav = await utilities.getNav()
   const account_id = parseInt(req.params.account_id)
 
   const result = await accountModel.getAccountById(account_id)
+
+  if (!result.rows.length) {
+    req.flash("notice", "Account not found.")
+    return res.redirect("/account/")
+  }
+
   const accountData = result.rows[0]
 
   res.render("account/update", {
     title: "Update Account",
-    account_firstname: accountData.account_firstname,
-    account_lastname: accountData.account_lastname,
-    account_email: accountData.account_email,
-    account_id: accountData.account_id,
+    nav,
+    ...accountData,
     errors: null,
   })
 }
@@ -112,17 +157,24 @@ async function buildUpdateAccount(req, res) {
  * Update Account
  **************************************** */
 async function updateAccount(req, res) {
+  let nav = await utilities.getNav()
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
     return res.render("account/update", {
       title: "Update Account",
+      nav,
       ...req.body,
       errors,
     })
   }
 
-  const { account_id, account_firstname, account_lastname, account_email } = req.body
+  const {
+    account_id,
+    account_firstname,
+    account_lastname,
+    account_email,
+  } = req.body
 
   const result = await accountModel.updateAccount(
     account_id,
@@ -166,6 +218,19 @@ async function updatePassword(req, res) {
 }
 
 /* ****************************************
+ * Account Management View
+ **************************************** */
+async function buildManagement(req, res) {
+  let nav = await utilities.getNav()
+
+  res.render("account/management", {
+    title: "Account Management",
+    nav,
+    accountData: res.locals.accountData,
+  })
+}
+
+/* ****************************************
  * Logout
  **************************************** */
 function logoutAccount(req, res) {
@@ -182,5 +247,6 @@ module.exports = {
   buildUpdateAccount,
   updateAccount,
   updatePassword,
+  buildManagement,
   logoutAccount,
 }

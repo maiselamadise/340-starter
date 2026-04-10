@@ -17,7 +17,10 @@ router.get(
 /* *********************************
  * Login View
  ******************************** */
-router.get("/login", utilities.handleErrors(accountController.buildLogin))
+router.get(
+  "/login",
+  utilities.handleErrors(accountController.buildLogin)
+)
 
 /* *********************************
  * Process Login
@@ -32,7 +35,10 @@ router.post(
 /* *********************************
  * Registration View
  ******************************** */
-router.get("/register", utilities.handleErrors(accountController.buildRegister))
+router.get(
+  "/register",
+  utilities.handleErrors(accountController.buildRegister)
+)
 
 /* *********************************
  * Process Registration
@@ -76,6 +82,10 @@ router.post(
 /* *********************************
  * Logout
  ******************************** */
-router.get("/logout", accountController.logoutAccount)
+router.get(
+  "/logout",
+  utilities.checkLogin,
+  accountController.logoutAccount
+)
 
 module.exports = router
